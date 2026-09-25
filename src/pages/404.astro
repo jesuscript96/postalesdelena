@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { IMG } from '../lib/img.js';
+---
+<Base title="Página no encontrada">
+  <section class="relative min-h-[80vh] flex items-center justify-center text-center overflow-hidden">
+    <img src={IMG.venice} alt="" class="absolute inset-0 w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-ink/55"></div>
+    <div class="relative z-10 text-cream container-x">
+      <p class="eyebrow text-cream/80 mb-4">Error 404</p>
+      <h1 class="font-serif text-6xl md:text-8xl">Te has perdido</h1>
+      <p class="mt-4 text-cream/85">Pero perderse también es una forma de viajar. Volvamos al camino.</p>
+      <div class="mt-8 flex gap-4 justify-center">
+        <a href="/" class="btn-light">Volver al inicio</a>
+        <a href="/guias" class="btn-light">Ver las guías</a>
+      </div>
+    </div>
+  </section>
+</Base>

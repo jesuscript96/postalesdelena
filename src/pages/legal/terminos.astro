@@ -1,0 +1,17 @@
+---
+import Legal from '../../layouts/Legal.astro';
+import { SITE } from '../../data/site.js';
+---
+<Legal title="Términos y devoluciones">
+  <p><strong>Importante:</strong> plantilla orientativa para la venta de productos digitales. Revísala antes de publicar.</p>
+  <h2>1. Productos digitales</h2>
+  <p>Las guías son productos digitales en formato PDF de descarga inmediata tras el pago. No se envía ningún producto físico.</p>
+  <h2>2. Precios y pago</h2>
+  <p>Los precios se muestran en euros ({SITE.currency}) e incluyen los impuestos aplicables. El pago se realiza a través de una pasarela segura.</p>
+  <h2>3. Entrega</h2>
+  <p>Tras completar la compra recibirás un enlace de descarga por correo electrónico. Si no lo recibes, escríbenos a {SITE.email}.</p>
+  <h2>4. Derecho de desistimiento</h2>
+  <p>De acuerdo con la normativa de consumo, en los contenidos digitales suministrados de forma inmediata el usuario acepta que, al iniciar la descarga, renuncia al derecho de desistimiento. En caso de problema técnico con el archivo, ofrecemos solución o reembolso.</p>
+  <h2>5. Atención al cliente</h2>
+  <p>Para cualquier incidencia con tu compra, contacta en {SITE.email} y te ayudaremos lo antes posible.</p>
+</Legal>

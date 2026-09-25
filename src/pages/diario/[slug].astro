@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { SITE } from '../../data/site.js';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', ({ data }) => !data.draft);
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article, articles },
+  }));
+}
+
+const { article, articles } = Astro.props;
+const { data } = article;
+const { Content } = await article.render();
+const fmt = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const guides = await getCollection('guides');
+const related = data.relatedGuide ? guides.find((g) => g.slug === data.relatedGuide) : null;
+const more = articles
+  .filter((a) => a.slug !== article.slug && a.data.category === data.category)
+  .slice(0, 3);
+const fallback = articles.filter((a) => a.slug !== article.slug).slice(0, 3);
+const suggestions = more.length ? more : fallback;
+---
+
+<Base title={data.title} description={data.excerpt} image={data.cover}>
+  <article>
+    <!-- Portada -->
+    <header class="relative h-[68vh] min-h-[460px] flex items-end overflow-hidden">
+      <img src={data.cover} alt={data.title} class="absolute inset-0 w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/20 to-ink/30"></div>
+      <div class="container-x relative z-10 pb-16 text-cream max-w-3xl">
+        <p class="eyebrow text-cream/80 mb-4">{data.category} · {data.readingTime}</p>
+        <h1 class="font-serif text-4xl md:text-6xl leading-[1.02]">{data.title}</h1>
+        <p class="mt-5 text-cream/85 leading-relaxed max-w-2xl">{data.excerpt}</p>
+        <p class="mt-6 text-xs uppercase tracking-widest text-cream/70">Por {SITE.author} · {fmt.format(data.date)}</p>
+      </div>
+    </header>
+
+    <!-- Cuerpo -->
+    <div class="container-x py-20">
+      <div class="max-w-2xl mx-auto prose-editorial">
+        <Content />
+      </div>
+
+      {related && (
+        <aside class="max-w-2xl mx-auto mt-16 bg-sand p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center">
+          <img src={related.data.cover} alt={related.data.title} class="w-40 aspect-[3/4] object-cover shrink-0" />
+          <div>
+            <p class="eyebrow mb-2">¿Te vas de viaje?</p>
+            <h3 class="font-serif text-2xl">Llévate la guía de {related.data.country}</h3>
+            <p class="text-sm text-stone mt-2">{related.data.subtitle}</p>
+            <a href={`/guias/${related.slug}`} class="btn-dark mt-5">Ver la guía · {SITE.currency}{related.data.price}</a>
+          </div>
+        </aside>
+      )}
+    </div>
+
+    <!-- Más historias -->
+    <section class="container-x pb-24 border-t border-line pt-16">
+      <p class="eyebrow mb-8">Sigue leyendo</p>
+      <div class="grid md:grid-cols-3 gap-10">
+        {suggestions.map((a) => <ArticleCard article={a} />)}
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .prose-editorial :global(h2) { font-family: '"Cormorant Garamond"', serif; font-size: 2.1rem; margin: 2.5rem 0 1rem; }
+  .prose-editorial :global(h3) { font-family: '"Cormorant Garamond"', serif; font-size: 1.6rem; margin: 2rem 0 0.75rem; }
+  .prose-editorial :global(p) { color: #5f5749; line-height: 1.9; margin-bottom: 1.4rem; font-size: 1.08rem; }
+  .prose-editorial :global(blockquote) { border-left: 2px solid #B08B6E; padding-left: 1.5rem; font-family: '"Cormorant Garamond"', serif; font-size: 1.5rem; font-style: italic; color: #1F1B16; margin: 2rem 0; }
+  .prose-editorial :global(strong) { color: #1F1B16; font-weight: 500; }
+</style>

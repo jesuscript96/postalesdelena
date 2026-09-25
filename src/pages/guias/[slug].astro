@@ -1,0 +1,164 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import { SITE } from '../../data/site.js';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides', ({ data }) => !data.draft);
+  return guides.map((guide) => ({
+    params: { slug: guide.slug },
+    props: { guide, guides },
+  }));
+}
+
+const { guide, guides } = Astro.props;
+const { data } = guide;
+const { Content } = await guide.render();
+
+const related = guides
+  .filter((g) => g.slug !== guide.slug && g.data.region === data.region)
+  .slice(0, 3);
+const gallery = [data.cover, ...data.gallery];
+
+// Datos estructurados para SEO (producto)
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: data.title,
+  image: gallery,
+  description: data.subtitle ?? data.title,
+  brand: { '@type': 'Brand', name: SITE.name },
+  offers: {
+    '@type': 'Offer',
+    price: data.price,
+    priceCurrency: 'EUR',
+    availability: 'https://schema.org/InStock',
+  },
+};
+---
+
+<Base title={data.title} description={data.subtitle} image={data.cover}>
+  <set:html slot="head" value={`<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`} />
+
+  <section class="pt-20">
+    <div class="container-x grid lg:grid-cols-[1.1fr_1fr] gap-14 py-14">
+      <!-- Galería -->
+      <div>
+        <div class="aspect-[4/5] overflow-hidden bg-sand mb-3">
+          <img id="main-img" src={gallery[0]} alt={data.title} class="w-full h-full object-cover" />
+        </div>
+        <div class="flex gap-3">
+          {gallery.slice(0, 5).map((src, i) => (
+            <button class="thumb aspect-square w-20 overflow-hidden bg-sand opacity-70 hover:opacity-100" data-src={src}>
+              <img src={src} alt={`${data.title} ${i + 1}`} class="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Info compra -->
+      <div class="lg:pt-6">
+        <p class="eyebrow mb-3">Guía de viaje digital · PDF</p>
+        <h1 class="font-serif text-5xl md:text-6xl leading-[0.95]">{data.title}</h1>
+        {data.subtitle && <p class="mt-4 text-stone leading-relaxed">{data.subtitle}</p>}
+
+        <div class="flex items-baseline gap-4 mt-8">
+          <span class="font-serif text-4xl">{SITE.currency}{data.price}</span>
+          <span class="text-xs text-stone uppercase tracking-widest">Descarga inmediata</span>
+        </div>
+
+        <div class="mt-8 flex flex-col gap-3">
+          <a href={data.buyUrl} class="btn-dark w-full" data-buy>Añadir al carrito</a>
+          <p class="text-xs text-stone text-center">Pago seguro · PDF entregado por email al instante</p>
+        </div>
+
+        <!-- Ficha rápida -->
+        <dl class="mt-10 grid grid-cols-2 gap-y-6 border-t border-line pt-8">
+          <div><dt class="eyebrow mb-1">Duración</dt><dd class="font-serif text-xl">{data.duration}</dd></div>
+          <div><dt class="eyebrow mb-1">Mejor época</dt><dd class="font-serif text-xl">{data.bestWhen}</dd></div>
+          {data.pages && <div><dt class="eyebrow mb-1">Páginas</dt><dd class="font-serif text-xl">{data.pages}</dd></div>}
+          <div><dt class="eyebrow mb-1">Región</dt><dd class="font-serif text-xl">{data.country}</dd></div>
+          <div class="col-span-2"><dt class="eyebrow mb-1">Para quien ama</dt><dd class="font-serif text-xl">{data.forWho}</dd></div>
+        </dl>
+
+        {data.styles.length > 0 && (
+          <div class="mt-8 flex flex-wrap gap-2">
+            {data.styles.map((s) => <span class="px-3 py-1 border border-line text-[11px] uppercase tracking-widest text-stone">{s}</span>)}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué incluye -->
+  {data.includes.length > 0 && (
+    <section class="bg-sand py-24">
+      <div class="container-x">
+        <div class="text-center mb-16">
+          <p class="eyebrow mb-3">Esta guía incluye</p>
+          <h2 class="font-serif text-4xl md:text-5xl">Todo lo que necesitas para tu viaje</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-x-10 gap-y-14">
+          {data.includes.map((item, i) => (
+            <div>
+              <span class="font-serif text-2xl text-clay">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="font-serif text-2xl mt-3">{item.title}</h3>
+              <p class="text-sm text-stone mt-2 leading-relaxed">{item.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Cuerpo / muestra -->
+  <section class="container-x py-24">
+    <div class="max-w-2xl mx-auto prose-editorial">
+      <Content />
+    </div>
+    <div class="max-w-2xl mx-auto mt-12 text-center">
+      <a href={data.buyUrl} class="btn-dark" data-buy>Comprar la guía · {SITE.currency}{data.price}</a>
+    </div>
+  </section>
+
+  <!-- Relacionadas -->
+  {related.length > 0 && (
+    <section class="container-x pb-24">
+      <p class="eyebrow mb-3">Sigue explorando {data.region}</p>
+      <h2 class="font-serif text-4xl mb-10">Otras guías que te encantarán</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+        {related.map((g) => <GuideCard guide={g} width="w-full" />)}
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .prose-editorial :global(h2) { font-family: '"Cormorant Garamond"', serif; font-size: 2rem; margin: 2.5rem 0 1rem; }
+  .prose-editorial :global(h3) { font-family: '"Cormorant Garamond"', serif; font-size: 1.5rem; margin: 2rem 0 0.75rem; }
+  .prose-editorial :global(p) { color: #5f5749; line-height: 1.85; margin-bottom: 1.25rem; }
+  .prose-editorial :global(ul) { margin: 1.25rem 0; padding-left: 1.25rem; list-style: disc; color: #5f5749; }
+  .prose-editorial :global(li) { margin-bottom: 0.6rem; line-height: 1.7; }
+  .prose-editorial :global(blockquote) { border-left: 2px solid #B08B6E; padding-left: 1.5rem; font-family: '"Cormorant Garamond"', serif; font-size: 1.4rem; font-style: italic; color: #1F1B16; margin: 2rem 0; }
+  .prose-editorial :global(strong) { color: #1F1B16; font-weight: 500; }
+</style>
+
+<script>
+  document.querySelectorAll('.thumb').forEach((t) => {
+    t.addEventListener('click', () => {
+      const img = document.getElementById('main-img');
+      if (img && t.dataset.src) img.src = t.dataset.src;
+    });
+  });
+  // Carrito demo (localStorage) — sustituir por pasarela real de Elena
+  document.querySelectorAll('[data-buy]').forEach((b) => {
+    b.addEventListener('click', (e) => {
+      if (b.getAttribute('href') === '#') {
+        e.preventDefault();
+        b.textContent = '✓ Añadido — checkout próximamente';
+        setTimeout(() => (b.textContent = 'Añadir al carrito'), 2200);
+      }
+    });
+  });
+</script>

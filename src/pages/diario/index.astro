@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import { IMG } from '../../lib/img.js';
+
+const articles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+const featured = articles.find((a) => a.data.featured) ?? articles[0];
+const rest = articles.filter((a) => a.slug !== featured.slug);
+const cats = ['Todas', 'Destinos', 'Hoteles', 'Gastronomía', 'Rituales Slow'];
+---
+
+<Base title="El Diario" description="Historias de viaje: hoteles con alma, rincones auténticos, gastronomía y pequeños rituales para viajar despacio.">
+  <section class="container-x pt-28 pb-12 text-center">
+    <p class="eyebrow mb-4">El Diario del Viajero</p>
+    <h1 class="font-serif text-5xl md:text-7xl">Historias para viajar despacio</h1>
+    <p class="mt-5 max-w-xl mx-auto text-stone">Rincones con alma, hoteles que enamoran y pequeños rituales que convierten un viaje en un recuerdo.</p>
+  </section>
+
+  <!-- Destacado -->
+  {featured && (
+    <section class="container-x pb-16">
+      <a href={`/diario/${featured.slug}`} class="group grid md:grid-cols-2 gap-10 items-center">
+        <div class="aspect-[4/3] overflow-hidden bg-sand">
+          <img src={featured.data.cover} alt={featured.data.title} class="w-full h-full object-cover transition-transform duration-[1.2s] ease-slow group-hover:scale-105" />
+        </div>
+        <div>
+          <p class="eyebrow mb-3">Destacado · {featured.data.category}</p>
+          <h2 class="font-serif text-4xl md:text-5xl leading-tight link-underline">{featured.data.title}</h2>
+          <p class="mt-5 text-stone leading-relaxed">{featured.data.excerpt}</p>
+          <span class="mt-6 inline-block font-sans uppercase tracking-widest text-[12px] text-clay">Leer la historia →</span>
+        </div>
+      </a>
+    </section>
+  )}
+
+  <!-- Filtro categorías -->
+  <section class="container-x pb-24">
+    <div class="flex flex-wrap gap-2 mb-12 border-t border-line pt-10">
+      {cats.map((c, i) => (
+        <button class:list={['cat-btn px-5 py-2 font-sans uppercase tracking-widest text-[11px] border transition-colors', i === 0 ? 'bg-ink text-cream border-ink' : 'border-line text-stone hover:border-ink hover:text-ink']} data-value={c}>{c}</button>
+      ))}
+    </div>
+    <div class="grid md:grid-cols-3 gap-x-8 gap-y-14">
+      {rest.map((a) => (
+        <div class="art-item" data-cat={a.data.category}><ArticleCard article={a} /></div>
+      ))}
+    </div>
+  </section>
+
+  <Newsletter />
+</Base>
+
+<script>
+  const items = [...document.querySelectorAll('.art-item')];
+  document.querySelectorAll('.cat-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach((b) => {
+        b.classList.remove('bg-ink', 'text-cream', 'border-ink');
+        b.classList.add('border-line', 'text-stone');
+      });
+      btn.classList.add('bg-ink', 'text-cream', 'border-ink');
+      btn.classList.remove('border-line', 'text-stone');
+      const v = btn.dataset.value;
+      items.forEach((el) => el.classList.toggle('hidden', v !== 'Todas' && el.dataset.cat !== v));
+    });
+  });
+</script>

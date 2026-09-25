@@ -1,0 +1,26 @@
+---
+---
+<div id="cookie-banner" class="fixed bottom-0 inset-x-0 z-50 hidden">
+  <div class="container-x py-5">
+    <div class="bg-ink text-cream/90 p-6 md:p-7 flex flex-col md:flex-row items-start md:items-center gap-5 shadow-2xl">
+      <p class="text-sm leading-relaxed flex-1">
+        Usamos cookies técnicas y, con tu permiso, analíticas para mejorar tu experiencia.
+        Puedes aceptarlas o rechazar las opcionales. <a href="/legal/cookies" class="underline">Más información</a>.
+      </p>
+      <div class="flex gap-3 shrink-0">
+        <button id="cookie-reject" class="btn-light !py-2.5 !px-6">Solo necesarias</button>
+        <button id="cookie-accept" class="btn !py-2.5 !px-6 bg-cream text-ink hover:bg-clay hover:text-cream">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const KEY = 'vd-cookie-consent';
+  const banner = document.getElementById('cookie-banner');
+  try {
+    if (!localStorage.getItem(KEY)) banner?.classList.remove('hidden');
+  } catch (e) { /* modo privado */ }
+  const set = (v) => { try { localStorage.setItem(KEY, v); } catch (e) {} banner?.classList.add('hidden'); };
+  document.getElementById('cookie-accept')?.addEventListener('click', () => set('all'));
+  document.getElementById('cookie-reject')?.addEventListener('click', () => set('necessary'));
+</script>

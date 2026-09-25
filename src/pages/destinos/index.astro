@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { IMG } from '../../lib/img.js';
+
+const guides = await getCollection('guides', ({ data }) => !data.draft);
+const regionData = [
+  { name: 'Italia', slug: 'italia', img: IMG.tuscany2, text: 'De la Toscana a la costa Amalfitana: arte, mar y dolce vita.' },
+  { name: 'Francia', slug: 'francia', img: IMG.lavender, text: 'París, Provenza y la Costa Azul, a un ritmo pausado.' },
+  { name: 'España', slug: 'espana', img: IMG.mallorca, text: 'Islas, pueblos blancos y la luz del Mediterráneo.' },
+  { name: 'Resto de Europa', slug: 'resto-de-europa', img: IMG.vienna, text: 'Nuevos rincones que iremos descubriendo despacio.' },
+];
+const count = (r) => guides.filter((g) => g.data.region === r).length;
+---
+
+<Base title="Destinos" description="Explora nuestros destinos: guías de viaje por Italia, Francia, España y más rincones de Europa.">
+  <section class="relative h-[52vh] min-h-[380px] flex items-center justify-center text-center overflow-hidden">
+    <img src={IMG.venice} alt="Destinos" class="absolute inset-0 w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-ink/45"></div>
+    <div class="relative z-10 text-cream container-x">
+      <p class="eyebrow text-cream/80 mb-4">Dónde viajar despacio</p>
+      <h1 class="font-serif text-5xl md:text-7xl">Destinos</h1>
+    </div>
+  </section>
+
+  <section class="container-x py-24">
+    <div class="grid md:grid-cols-2 gap-8">
+      {regionData.map((r) => (
+        <a href={`/destinos/${r.slug}`} class="group relative block overflow-hidden aspect-[16/10]">
+          <img src={r.img} alt={r.name} loading="lazy"
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.2s] ease-slow group-hover:scale-105" />
+          <div class="absolute inset-0 bg-ink/35 group-hover:bg-ink/45 transition-colors"></div>
+          <div class="relative z-10 h-full flex flex-col justify-end p-8 text-cream">
+            <p class="eyebrow text-cream/70 mb-2">{count(r.name)} guías</p>
+            <h2 class="font-serif text-4xl">{r.name}</h2>
+            <p class="text-cream/85 text-sm mt-2 max-w-sm">{r.text}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</Base>

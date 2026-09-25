@@ -1,0 +1,77 @@
+---
+import { SITE, NAV } from '../data/site.js';
+const path = Astro.url.pathname;
+const isActive = (href) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header
+  id="site-header"
+  class="fixed top-0 inset-x-0 z-40 transition-colors duration-500 ease-slow"
+  data-transparent="true"
+>
+  <div class="container-x flex items-center justify-between h-20">
+    <!-- Logo -->
+    <a href="/" class="leading-[0.85] font-serif tracking-[0.15em] text-[15px] md:text-[16px]">
+      {SITE.logoLines.map((l) => <span class="block">{l}</span>)}
+    </a>
+
+    <!-- Nav desktop -->
+    <nav class="hidden lg:flex items-center gap-8">
+      {NAV.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'font-sans uppercase tracking-widest text-[12px] link-underline',
+            isActive(item.href) ? 'opacity-100' : 'opacity-70 hover:opacity-100',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-5">
+      <a href="/carrito" class="hidden md:inline font-sans uppercase tracking-widest text-[12px] opacity-70 hover:opacity-100">Carrito (0)</a>
+      <button id="menu-toggle" class="lg:hidden flex flex-col gap-1.5 w-7" aria-label="Abrir menú">
+        <span class="h-px w-full bg-current transition-all"></span>
+        <span class="h-px w-full bg-current transition-all"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Menú móvil -->
+<div id="mobile-menu" class="fixed inset-0 z-50 bg-cream translate-x-full transition-transform duration-500 ease-slow lg:hidden">
+  <div class="container-x flex items-center justify-between h-20">
+    <span class="font-serif tracking-[0.15em] text-[15px]">{SITE.logoLines.join(' ')}</span>
+    <button id="menu-close" class="text-2xl" aria-label="Cerrar menú">&times;</button>
+  </div>
+  <nav class="flex flex-col gap-6 px-8 mt-10">
+    {NAV.map((item) => (
+      <a href={item.href} class="font-serif text-3xl text-ink">{item.label}</a>
+    ))}
+    <a href="/carrito" class="font-sans uppercase tracking-widest text-[12px] mt-6 opacity-70">Carrito (0)</a>
+  </nav>
+</div>
+
+<script>
+  const header = document.getElementById('site-header');
+  const transparent = header?.dataset.transparent === 'true';
+  const solidCls = ['bg-cream/95', 'backdrop-blur', 'border-b', 'border-line', 'shadow-sm', 'text-ink'];
+  const setState = () => {
+    const scrolled = window.scrollY > 40;
+    if (!transparent || scrolled) {
+      header?.classList.add(...solidCls);
+      header?.classList.remove('text-cream');
+    } else {
+      header?.classList.remove(...solidCls);
+      header?.classList.add('text-cream');
+    }
+  };
+  window.addEventListener('scroll', setState, { passive: true });
+  setState();
+
+  const menu = document.getElementById('mobile-menu');
+  document.getElementById('menu-toggle')?.addEventListener('click', () => menu?.classList.remove('translate-x-full'));
+  document.getElementById('menu-close')?.addEventListener('click', () => menu?.classList.add('translate-x-full'));
+</script>

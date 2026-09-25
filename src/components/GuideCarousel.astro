@@ -1,0 +1,17 @@
+---
+import GuideCard from './GuideCard.astro';
+const { eyebrow, title, guides, cta } = Astro.props;
+---
+<section class="container-x py-20 reveal">
+  <div class="flex items-end justify-between mb-10">
+    <div>
+      {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+      <h2 class="font-serif text-4xl md:text-5xl">{title}</h2>
+    </div>
+    {cta && <a href={cta.href} class="hidden md:inline font-sans uppercase tracking-widest text-[12px] link-underline">{cta.label}</a>}
+  </div>
+  <p class="eyebrow mb-6 md:hidden">Desliza para ver todas →</p>
+  <div class="carousel no-scrollbar">
+    {guides.map((g) => <GuideCard guide={g} />)}
+  </div>
+</section>

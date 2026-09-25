@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import GuideCard from '../../components/GuideCard.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import { IMG } from '../../lib/img.js';
+
+export async function getStaticPaths() {
+  const META = {
+    italia: { name: 'Italia', img: IMG.tuscany1, intro: 'Del Renacimiento florentino a los limoneros de Amalfi, Italia es el país donde viajar despacio se convierte en un arte. Arte, gastronomía, mar y montaña en un mismo destino.' },
+    francia: { name: 'Francia', img: IMG.provence, intro: 'París eterno, la lavanda de Provenza y la luz de la Costa Azul. Francia se saborea con calma, entre mercados, cafés y largos paseos.' },
+    espana: { name: 'España', img: IMG.mallorca, intro: 'Calas turquesa, pueblos blancos y una vida que sucede en la calle. Descubre la España más auténtica lejos de las prisas.' },
+    'resto-de-europa': { name: 'Resto de Europa', img: IMG.vienna, intro: 'Nuevos rincones de Europa que iremos añadiendo despacio, con el mismo cuidado de siempre.' },
+  };
+  return Object.entries(META).map(([region, meta]) => ({ params: { region }, props: { meta } }));
+}
+
+const { meta } = Astro.props;
+const guides = (await getCollection('guides', ({ data }) => !data.draft && data.region === meta.name))
+  .sort((a, b) => a.data.order - b.data.order);
+const articles = (await getCollection('articles', ({ data }) => !data.draft))
+  .filter((a) => guides.some((g) => g.slug === a.data.relatedGuide))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+
+<Base title={`Guías de ${meta.name}`} description={meta.intro} image={meta.img}>
+  <section class="relative h-[60vh] min-h-[420px] flex items-end overflow-hidden">
+    <img src={meta.img} alt={meta.name} class="absolute inset-0 w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-gradient-to-t from-ink/70 to-ink/20"></div>
+    <div class="container-x relative z-10 pb-16 text-cream">
+      <p class="eyebrow text-cream/80 mb-3">Destino</p>
+      <h1 class="font-serif text-6xl md:text-8xl">{meta.name}</h1>
+    </div>
+  </section>
+
+  <section class="container-x py-20">
+    <p class="max-w-2xl font-serif text-2xl md:text-3xl leading-snug text-ink/90">{meta.intro}</p>
+  </section>
+
+  <section class="container-x pb-16">
+    <p class="eyebrow mb-8">{guides.length} guías disponibles</p>
+    {guides.length > 0 ? (
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-14">
+        {guides.map((g) => <GuideCard guide={g} width="w-full" />)}
+      </div>
+    ) : (
+      <p class="font-serif text-3xl text-stone py-12">Muy pronto añadiremos guías de {meta.name}.</p>
+    )}
+  </section>
+
+  {articles.length > 0 && (
+    <section class="container-x py-16 border-t border-line">
+      <p class="eyebrow mb-8">Historias de {meta.name}</p>
+      <div class="grid md:grid-cols-3 gap-10">
+        {articles.map((a) => <ArticleCard article={a} />)}
+      </div>
+    </section>
+  )}
+
+  <Newsletter />
+</Base>

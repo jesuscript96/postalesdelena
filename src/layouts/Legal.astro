@@ -1,0 +1,30 @@
+---
+import Base from './Base.astro';
+import { FOOTER } from '../data/site.js';
+const { title, updated = 'Septiembre de 2026' } = Astro.props;
+---
+<Base title={title}>
+  <section class="container-x pt-32 pb-24 grid lg:grid-cols-[220px_1fr] gap-14">
+    <aside class="hidden lg:block">
+      <p class="eyebrow mb-5">Legal</p>
+      <nav class="flex flex-col gap-3 text-sm">
+        {FOOTER.legal.map((l) => <a href={l.href} class="link-underline text-stone hover:text-ink">{l.label}</a>)}
+      </nav>
+    </aside>
+    <div class="max-w-2xl">
+      <h1 class="font-serif text-4xl md:text-5xl">{title}</h1>
+      <p class="text-xs text-stone mt-3 uppercase tracking-widest">Última actualización: {updated}</p>
+      <div class="legal-body mt-10">
+        <slot />
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .legal-body :global(h2) { font-family: '"Cormorant Garamond"', serif; font-size: 1.7rem; margin: 2.2rem 0 0.8rem; }
+  .legal-body :global(p) { color: #5f5749; line-height: 1.8; margin-bottom: 1rem; }
+  .legal-body :global(ul) { list-style: disc; padding-left: 1.3rem; color: #5f5749; margin-bottom: 1rem; }
+  .legal-body :global(li) { margin-bottom: 0.4rem; }
+  .legal-body :global(a) { color: #B08B6E; text-decoration: underline; }
+  .legal-body :global(strong) { color: #1F1B16; }
+</style>
