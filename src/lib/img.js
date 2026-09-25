@@ -17,7 +17,7 @@ export const IMG = {
   paris: U('1502602898657-3e91760cbb34'),
   parisHero: U('1502602898657-3e91760cbb34', 2000),
   provence: U('1499002238440-d264edd596ec'),
-  lavender: U('1498307833015-e7b400441eb8'),
+  lavender: U('1499002238440-d264edd596ec'),
   como: U('1571003123894-1f0594d2b5d9'),
   sicily: U('1523365154888-8a758819b722'),
   mallorca: U('1509233725247-49e657c54213'),

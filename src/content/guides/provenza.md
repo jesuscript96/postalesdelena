@@ -11,7 +11,7 @@ styles: ["Romántico", "Gastronómico", "Naturaleza"]
 pages: 88
 cover: "https://images.unsplash.com/photo-1499002238440-d264edd596ec?auto=format&fit=crop&w=1200&q=80"
 gallery:
-  - "https://images.unsplash.com/photo-1498307833015-e7b400441eb8?auto=format&fit=crop&w=1200&q=80"
+  - "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80"
   - "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=80"
 includes:
   - title: "Ruta de la lavanda"

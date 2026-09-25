@@ -57,16 +57,19 @@
   }
 }
 
-/* Aparición suave al hacer scroll */
-.reveal {
+/* Aparición suave al hacer scroll (solo si JS activa el efecto) */
+.js .reveal {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
     transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.reveal.is-visible {
+.js .reveal.is-visible {
   opacity: 1;
   transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1 !important; transform: none !important; transition: none; }
 }
 
 /* Ken-burns suave para héroes */
