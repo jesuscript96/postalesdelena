@@ -15,12 +15,12 @@ const allStyles = [...new Set(guides.flatMap((g) => g.data.styles))];
 <Base title="Todas las guías" description="Explora todas las guías de viaje digitales: itinerarios cuidados para descubrir Europa despacio.">
   <!-- Cabecera -->
   <section class="relative h-[52vh] min-h-[380px] flex items-center justify-center text-center overflow-hidden">
-    <img src={IMG.tuscany1} alt="Guías de viaje" class="absolute inset-0 w-full h-full object-cover" />
-    <div class="absolute inset-0 bg-ink/45"></div>
+    <img src={IMG.tuscany1} alt="Guías de viaje" class="absolute inset-0 w-full h-full object-cover kenburns" />
+    <div class="hero-overlay"></div>
     <div class="relative z-10 text-cream container-x">
-      <p class="eyebrow text-cream/80 mb-4">La colección completa</p>
-      <h1 class="font-serif text-5xl md:text-7xl">Nuestras guías</h1>
-      <p class="mt-4 max-w-xl mx-auto text-cream/85">Itinerarios día a día, mapas, hoteles y experiencias para viajar despacio.</p>
+      <p class="eyebrow-line centered text-cream/75 mb-4 text-shadow-soft">La colección completa</p>
+      <h1 class="font-serif text-5xl md:text-7xl text-shadow-hero">Nuestras <span class="italic" style="color:#EBD4B8">guías</span></h1>
+      <p class="mt-4 max-w-xl mx-auto text-cream/90 text-shadow-soft">Itinerarios día a día, mapas, hoteles y experiencias para viajar despacio.</p>
     </div>
   </section>
 

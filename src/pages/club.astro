@@ -17,11 +17,11 @@ const testimonials = [
 
 <Base title="El Club" description="Únete al club: una carta semanal con rincones con alma, hoteles que enamoran y planes para viajar despacio.">
   <section class="relative min-h-[80vh] flex items-center overflow-hidden">
-    <img src={IMG.como} alt="El Club" class="absolute inset-0 w-full h-full object-cover" />
-    <div class="absolute inset-0 bg-ink/55"></div>
+    <img src={IMG.como} alt="El Club" class="absolute inset-0 w-full h-full object-cover kenburns" />
+    <div class="hero-overlay"></div>
     <div class="container-x relative z-10 text-cream max-w-2xl">
-      <p class="eyebrow text-cream/80 mb-4">Members Only · {SITE.name} Mail</p>
-      <h1 class="font-serif text-5xl md:text-7xl leading-[0.98]">Únete al Club</h1>
+      <p class="eyebrow-line text-cream/75 mb-4 text-shadow-soft">Members Only · {SITE.name} Mail</p>
+      <h1 class="font-serif text-5xl md:text-7xl leading-[0.98] text-shadow-hero">Únete al <span class="italic" style="color:#EBD4B8">Club</span></h1>
       <p class="mt-6 text-cream/85 leading-relaxed text-lg">Una comunidad para quienes viajan despacio. Inspiración, rincones secretos y ventajas exclusivas, directo a tu correo.</p>
       <form class="mt-8 flex max-w-md border-b border-cream/40" onsubmit="this.nextElementSibling.classList.remove('hidden');return false;">
         <input required type="email" placeholder="Tu correo electrónico" class="bg-transparent flex-1 py-3 outline-none placeholder-cream/50 text-cream" />

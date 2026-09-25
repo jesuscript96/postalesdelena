@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,6 +14,17 @@
     @apply bg-cream text-ink font-sans;
     font-weight: 400;
   }
+  /* Textura de papel muy sutil sobre toda la web */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
   ::selection {
     @apply bg-clay/25;
   }
@@ -27,10 +38,26 @@
   .eyebrow {
     @apply font-sans uppercase tracking-widest text-[11px] text-stone;
   }
+  /* Etiqueta con línea a un lado */
+  .eyebrow-line {
+    @apply flex items-center gap-3 eyebrow;
+  }
+  .eyebrow-line::before {
+    content: '';
+    @apply block h-px w-8 bg-current opacity-40;
+  }
+  .eyebrow-line.centered { @apply justify-center; }
+  .eyebrow-line.centered::after {
+    content: '';
+    @apply block h-px w-8 bg-current opacity-40;
+  }
   .container-x {
     @apply max-w-container mx-auto px-6 md:px-10;
   }
-  /* Botón principal */
+  /* Palabra acento en cursiva */
+  .accent { @apply italic text-clay; }
+
+  /* Botones */
   .btn {
     @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 font-sans uppercase tracking-widest text-[12px] transition-all duration-500 ease-slow;
   }
@@ -41,7 +68,10 @@
     @apply btn border border-ink text-ink hover:bg-ink hover:text-cream;
   }
   .btn-light {
-    @apply btn border border-cream/60 text-cream hover:bg-cream hover:text-ink;
+    @apply btn border border-cream/70 text-cream hover:bg-cream hover:text-ink;
+  }
+  .btn-solid-light {
+    @apply btn bg-cream text-ink hover:bg-clay hover:text-cream;
   }
   /* Enlace con subrayado animado */
   .link-underline {
@@ -55,6 +85,32 @@
   .carousel > * {
     @apply snap-start shrink-0;
   }
+  /* Hairline separador */
+  .rule { @apply h-px w-full bg-line; }
+}
+
+@layer utilities {
+  /* Sombra de texto para legibilidad sobre imágenes */
+  .text-shadow-hero {
+    text-shadow: 0 2px 30px rgba(20, 16, 12, 0.55), 0 1px 3px rgba(20, 16, 12, 0.35);
+  }
+  .text-shadow-soft {
+    text-shadow: 0 1px 18px rgba(20, 16, 12, 0.4);
+  }
+  /* asegura que el contenido queda por encima de la textura */
+  main, header, footer { position: relative; z-index: 2; }
+}
+
+/* Overlay del hero: degradado en capas + viñeta para contraste garantizado */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(20,16,12,0.85) 0%, rgba(20,16,12,0.25) 38%, rgba(20,16,12,0.15) 62%, rgba(20,16,12,0.5) 100%),
+    radial-gradient(120% 90% at 50% 100%, rgba(20,16,12,0.55) 0%, rgba(20,16,12,0) 55%);
+}
+.hero-overlay.soft {
+  background: linear-gradient(to top, rgba(20,16,12,0.8) 0%, rgba(20,16,12,0.2) 45%, rgba(20,16,12,0.45) 100%);
 }
 
 /* Aparición suave al hacer scroll (solo si JS activa el efecto) */
@@ -70,15 +126,46 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .js .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+  .kenburns { animation: none !important; }
 }
 
 /* Ken-burns suave para héroes */
 @keyframes kenburns {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
+  from { transform: scale(1.02); }
+  to { transform: scale(1.12); }
 }
 .kenburns {
-  animation: kenburns 18s ease-out forwards;
+  animation: kenburns 20s ease-out forwards;
+}
+
+/* Indicador de scroll */
+@keyframes scrolldot {
+  0% { transform: translateY(0); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateY(14px); opacity: 0; }
+}
+.scroll-dot::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 3px;
+  height: 3px;
+  margin-left: -1.5px;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: scrolldot 1.8s infinite;
+}
+
+/* Marquee superior */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: marquee 32s linear infinite;
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }

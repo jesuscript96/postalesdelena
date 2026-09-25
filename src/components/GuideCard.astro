@@ -5,25 +5,31 @@ const { data, slug } = guide;
 const href = `/guias/${slug}`;
 ---
 <article class:list={['group', width]}>
-  <a href={href} class="block overflow-hidden bg-sand">
+  <a href={href} class="block relative overflow-hidden bg-sand">
     <div class="aspect-[3/4] overflow-hidden">
       <img
         src={data.cover}
         alt={data.title}
         loading="lazy"
-        class="w-full h-full object-cover transition-transform duration-[1.2s] ease-slow group-hover:scale-105"
+        class="w-full h-full object-cover transition-transform duration-[1.4s] ease-slow group-hover:scale-105"
       />
     </div>
+    <!-- Precio flotante -->
+    <span class="absolute top-3 right-3 bg-cream/95 backdrop-blur px-3 py-1 font-serif text-sm">
+      {SITE.currency}{data.price}
+    </span>
+    <!-- Overlay al hover -->
+    <div class="absolute inset-0 bg-ink/0 group-hover:bg-ink/15 transition-colors duration-500"></div>
   </a>
-  <div class="pt-4 flex items-start justify-between gap-4">
-    <div>
-      <p class="eyebrow">{data.country}</p>
-      <h3 class="font-serif text-xl mt-1 leading-snug">
-        <a href={href} class="link-underline">{data.title}</a>
-      </h3>
-      <p class="text-xs text-stone mt-1">{data.duration} · {data.bestWhen}</p>
-    </div>
-    <p class="font-serif text-lg whitespace-nowrap">{SITE.currency}{data.price}</p>
+  <div class="pt-4">
+    <p class="eyebrow">{data.country}</p>
+    <h3 class="font-serif text-xl mt-1.5 leading-snug">
+      <a href={href} class="link-underline">{data.title}</a>
+    </h3>
+    <p class="text-xs text-stone mt-1.5">{data.duration} · {data.bestWhen}</p>
   </div>
-  <a href={href} class="mt-3 inline-block font-sans uppercase tracking-widest text-[11px] text-clay hover:text-ink">Ver la guía →</a>
+  <a href={href} class="mt-3 inline-flex items-center gap-2 font-sans uppercase tracking-widest text-[11px] text-clay group-hover:text-ink transition-colors">
+    Ver la guía
+    <span class="transition-transform duration-500 group-hover:translate-x-1">→</span>
+  </a>
 </article>
