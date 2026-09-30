@@ -4,6 +4,9 @@ import sitemap from '@astrojs/sitemap';
 
 // Cambia esta URL por el dominio definitivo de Elena antes de publicar.
 export default defineConfig({
-  site: 'https://vivirdespacio.com',
+  site: 'https://postalesdeelena.com',
   integrations: [tailwind(), sitemap()],
+  redirects: {
+    '/sobre-elena': '/sobre-mi',
+  },
 });

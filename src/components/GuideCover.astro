@@ -1,0 +1,26 @@
+---
+// Portada de una guía. Si la guía tiene `bookCover` se muestra esa imagen;
+// si no, una portada provisional con la foto de ambiente y el título.
+import { SITE } from '../data/site.js';
+const { guide, class: cls = '' } = Astro.props;
+const { data } = guide;
+---
+<div class:list={['guide-cover relative aspect-[5/7] overflow-hidden bg-sand shadow-[0_18px_40px_-18px_rgba(31,27,22,0.55)]', cls]}>
+  {data.bookCover ? (
+    <img src={data.bookCover} alt={`Portada de la guía de ${data.title}`} loading="lazy" class="w-full h-full object-cover" />
+  ) : (
+    <>
+      <img src={data.cover} alt={`Guía de viaje de ${data.title}`} loading="lazy" class="absolute inset-0 w-full h-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/0 to-ink/65"></div>
+      <div class="absolute inset-0 flex flex-col items-center justify-between text-center text-cream p-[8%]">
+        <p class="font-sans uppercase tracking-[0.3em] text-[9px] md:text-[10px] text-cream/90">{SITE.name}</p>
+        <div>
+          <p class="font-sans uppercase tracking-[0.3em] text-[9px] md:text-[10px] text-cream/85 mb-2">Guía de viaje</p>
+          <p class="font-serif uppercase tracking-[0.12em] text-4xl md:text-5xl text-shadow-hero">{data.title}</p>
+        </div>
+      </div>
+    </>
+  )}
+  <!-- Lomo del libro -->
+  <span class="absolute inset-y-0 left-0 w-2.5 bg-gradient-to-r from-ink/35 to-transparent"></span>
+</div>

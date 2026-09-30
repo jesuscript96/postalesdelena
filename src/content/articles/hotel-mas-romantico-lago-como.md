@@ -5,7 +5,6 @@ category: "Hoteles"
 cover: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1400&q=80"
 date: 2026-09-10
 readingTime: "6 min"
-relatedGuide: "toscana"
 featured: true
 ---
 

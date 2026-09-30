@@ -4,50 +4,48 @@ const year = new Date().getFullYear();
 const socials = Object.entries(SITE.social).filter(([, v]) => v);
 ---
 
-<footer class="bg-ink text-cream/80 mt-24">
-  <div class="container-x py-20">
-    <div class="grid md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-12">
-      <!-- Marca + newsletter -->
-      <div>
-        <div class="font-serif tracking-[0.15em] text-lg leading-tight text-cream">
-          {SITE.logoLines.map((l) => <span class="block">{l}</span>)}
-        </div>
-        <p class="mt-5 max-w-xs text-sm leading-relaxed text-cream/70">
-          {SITE.tagline}. Únete y recibe rincones, hoteles con alma e itinerarios cuidados en tu correo.
-        </p>
-        <form class="mt-6 flex border-b border-cream/30" onsubmit="return false">
-          <input type="email" required placeholder="Tu correo" class="bg-transparent flex-1 py-2 text-sm placeholder-cream/40 outline-none" />
-          <button class="font-sans uppercase tracking-widest text-[11px] py-2 hover:text-clay">Unirme</button>
-        </form>
-      </div>
+<!-- Pie minimalista: enlaces · boletín · redes / línea / copyright y legales -->
+<footer class="bg-cream text-ink border-t border-line mt-24">
+  <div class="container-x py-12 flex flex-col lg:flex-row lg:items-center gap-10 lg:gap-14">
+    <nav class="flex flex-wrap gap-x-12 gap-y-4">
+      {FOOTER.main.map((l) => (
+        <a href={l.href} class="font-sans uppercase tracking-[0.12em] text-[12px] link-underline">{l.label}</a>
+      ))}
+    </nav>
 
-      <div>
-        <h4 class="eyebrow text-cream/50 mb-5">Explorar</h4>
-        <ul class="space-y-3 text-sm">
-          {FOOTER.explore.map((l) => <li><a href={l.href} class="link-underline hover:text-cream">{l.label}</a></li>)}
-        </ul>
-      </div>
-      <div>
-        <h4 class="eyebrow text-cream/50 mb-5">Ayuda</h4>
-        <ul class="space-y-3 text-sm">
-          {FOOTER.help.map((l) => <li><a href={l.href} class="link-underline hover:text-cream">{l.label}</a></li>)}
-        </ul>
-      </div>
-      <div>
-        <h4 class="eyebrow text-cream/50 mb-5">Legal</h4>
-        <ul class="space-y-3 text-sm">
-          {FOOTER.legal.map((l) => <li><a href={l.href} class="link-underline hover:text-cream">{l.label}</a></li>)}
-        </ul>
-      </div>
-    </div>
+    <form class="lg:ml-auto flex items-end border-b border-ink/50 w-full max-w-sm" data-newsletter>
+      <label class="sr-only" for="footer-email">Correo electrónico</label>
+      <input id="footer-email" type="email" required placeholder="Suscríbete al boletín"
+        class="bg-transparent flex-1 py-2 text-[12px] uppercase tracking-[0.12em] placeholder-ink/80 outline-none" />
+      <button class="font-sans uppercase tracking-[0.12em] text-[12px] py-2 pl-4 hover:text-clay">Enviar</button>
+    </form>
 
-    <div class="mt-16 pt-8 border-t border-cream/15 flex flex-col md:flex-row items-center justify-between gap-6">
-      <p class="text-xs text-cream/50">© {year} {SITE.name} · {SITE.author}. Todos los derechos reservados.</p>
-      <div class="flex gap-6">
-        {socials.map(([name, url]) => (
-          <a href={url} target="_blank" rel="noopener" class="font-sans uppercase tracking-widest text-[11px] text-cream/60 hover:text-cream">{name}</a>
-        ))}
-      </div>
+    <div class="flex gap-6">
+      {socials.map(([name, url]) => (
+        <a href={url} target="_blank" rel="noopener" class="font-sans uppercase tracking-[0.12em] text-[12px] link-underline">{name}</a>
+      ))}
     </div>
   </div>
+
+  <div class="border-t border-line">
+    <p class="container-x py-8 text-center text-[12px] text-stone leading-loose">
+      <span>© {year}, {SITE.displayName}</span>
+      {FOOTER.legal.map((l) => (
+        <>
+          <span class="mx-2" aria-hidden="true">·</span>
+          <a href={l.href} class="hover:text-ink">{l.label}</a>
+        </>
+      ))}
+    </p>
+  </div>
 </footer>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-newsletter]').forEach((f) =>
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = f.querySelector('input');
+      if (input) { input.value = ''; input.placeholder = '¡Gracias por suscribirte!'; }
+    })
+  );
+</script>

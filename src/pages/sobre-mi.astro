@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site.js';
+import { IMG } from '../lib/img.js';
+
+// Elena: sustituye esta foto por una tuya (súbela a /public/images y pon aquí la ruta,
+// p. ej. '/images/elena.jpg').
+const photo = IMG.portrait;
+---
+
+<Base title="Sobre mí" description={`Soy ${SITE.author}, y creo en los viajes que se disfrutan sin prisas, se viven de verdad y se recuerdan durante mucho tiempo.`} image={photo}>
+  <section class="container-x pt-32 md:pt-36 pb-12 grid md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-12 lg:gap-20 items-start">
+    <div class="md:sticky md:top-28">
+      <div class="aspect-[4/5] overflow-hidden bg-sand">
+        <img src={photo} alt={SITE.author} class="w-full h-full object-cover" />
+      </div>
+    </div>
+
+    <div class="max-w-xl">
+      <p class="eyebrow mb-6">Sobre mí</p>
+      <p class="font-serif text-3xl md:text-[2.2rem] leading-[1.25]">
+        Soy {SITE.author}, y creo en los viajes que se disfrutan sin prisas, se viven de verdad y
+        se recuerdan durante mucho tiempo.
+      </p>
+
+      <div class="mt-10 space-y-6 text-stone leading-[1.85] md:text-[1.05rem]">
+        <p>
+          Para mí, viajar es mucho más que descubrir un destino. Es encontrar ese hotel al que no
+          quieres irte, descubrir una cala escondida, sentarte a comer sin mirar el reloj,
+          perderte por las calles de un pueblo o terminar el día viendo el atardecer con una copa
+          en la mano.
+        </p>
+        <p>
+          De esa forma de entender los viajes nace {SITE.displayName}: un espacio donde compartir
+          lugares especiales, hoteles con encanto, restaurantes, experiencias y pequeños
+          descubrimientos que hacen que cada destino tenga algo único.
+        </p>
+        <p>
+          Todo lo que encontrarás aquí parte de experiencias reales. De lugares que me han
+          sorprendido, restaurantes a los que volvería, rincones que merece la pena descubrir y
+          detalles que, muchas veces, son los que terminan convirtiendo un viaje bonito en un
+          recuerdo especial.
+        </p>
+        <p>
+          También encontrarás guías de viaje cuidadosamente elaboradas, creadas a partir de cada
+          experiencia y pensadas para reunir en un solo lugar todo aquello que me gustaría
+          encontrar antes de viajar: inspiración, recomendaciones y una selección de lugares que
+          realmente merece la pena conocer.
+        </p>
+        <p>
+          {SITE.displayName} es mi manera de compartir una forma de viajar: con curiosidad,
+          cuidando los detalles y dejando espacio para disfrutar del camino.
+        </p>
+        <p>
+          Espero que aquí encuentres inspiración para tu próximo viaje y, quizá, ese lugar al que
+          algún día quieras volver.
+        </p>
+      </div>
+
+      <p class="mt-10 font-serif italic text-2xl">— {SITE.author}</p>
+    </div>
+  </section>
+</Base>

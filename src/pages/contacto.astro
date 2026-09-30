@@ -2,67 +2,33 @@
 import Base from '../layouts/Base.astro';
 import { SITE } from '../data/site.js';
 
-const faqs = [
-  { q: '¿Cómo recibo la guía tras comprarla?', a: 'Las guías son digitales (PDF). Al completar la compra recibirás un enlace de descarga inmediato por email, para leerlas en el móvil, la tablet o el ordenador.' },
-  { q: '¿Puedo usar la guía sin conexión?', a: 'Sí. Descarga el PDF y llévalo contigo. Los mapas incluyen enlaces a Google Maps para cuando tengas conexión.' },
-  { q: '¿Tienen fecha de caducidad?', a: 'No. Una vez la compras, es tuya para siempre. Actualizo las guías periódicamente y te aviso si hay una nueva versión.' },
-  { q: '¿Hacéis viajes a medida?', a: 'Sí. En la sección Lifestyle puedes solicitar un viaje diseñado a tu medida o apuntarte a los retiros en grupo reducido.' },
-  { q: '¿Puedo colaborar o trabajar con vosotros?', a: 'Encantada de escuchar propuestas de marcas, hoteles y destinos afines a nuestra filosofía. Escríbeme y hablamos.' },
-  { q: '¿Puedo devolver una guía?', a: 'Al tratarse de productos digitales de descarga inmediata, no admiten devolución una vez descargados, salvo problema técnico. Consulta los términos para más detalle.' },
-];
+const field = 'w-full bg-transparent border-b border-line py-3 outline-none focus:border-ink mt-2';
 ---
 
-<Base title="Contacto" description="Ponte en contacto para dudas sobre las guías, viajes a medida o colaboraciones.">
-  <section class="container-x pt-28 pb-16">
-    <div class="max-w-2xl">
-      <p class="eyebrow mb-4">Hablemos</p>
-      <h1 class="font-serif text-5xl md:text-7xl">Contacto</h1>
-      <p class="mt-5 text-stone leading-relaxed">¿Tienes una duda, una idea de viaje o una propuesta de colaboración? Escríbeme y te respondo personalmente.</p>
-    </div>
-  </section>
+<Base title="Contacto" description="¿Hablamos? Escríbeme si tienes alguna pregunta sobre las guías, quieres compartir una recomendación o colaborar.">
+  <section class="container-x pt-32 md:pt-36 pb-12">
+    <div class="max-w-2xl mx-auto">
+      <h1 class="font-serif text-5xl md:text-6xl">¿Hablamos?</h1>
+      <p class="mt-6 text-stone leading-relaxed md:text-lg">
+        Si tienes alguna pregunta sobre las guías, quieres compartir una recomendación, estás
+        interesado/a en colaborar o simplemente quieres ponerte en contacto, estaré encantada de
+        leerte.
+      </p>
+      <p class="mt-6 font-serif italic text-2xl">Escríbeme y hablamos.</p>
 
-  <section class="container-x pb-24 grid md:grid-cols-[1.2fr_1fr] gap-16">
-    <form class="grid gap-6" onsubmit="this.querySelector('[data-ok]').classList.remove('hidden');return false;">
-      <div class="grid md:grid-cols-2 gap-6">
-        <label class="block"><span class="eyebrow">Nombre</span><input required class="w-full bg-transparent border-b border-line py-3 outline-none focus:border-ink mt-2" /></label>
-        <label class="block"><span class="eyebrow">Email</span><input required type="email" class="w-full bg-transparent border-b border-line py-3 outline-none focus:border-ink mt-2" /></label>
-      </div>
-      <label class="block"><span class="eyebrow">Asunto</span>
-        <select class="w-full bg-transparent border-b border-line py-3 outline-none focus:border-ink mt-2">
-          <option>Duda sobre una guía</option><option>Viaje a medida</option><option>Colaboración de marca</option><option>Otro</option>
-        </select>
-      </label>
-      <label class="block"><span class="eyebrow">Mensaje</span><textarea required rows="5" class="w-full bg-transparent border-b border-line py-3 outline-none focus:border-ink mt-2"></textarea></label>
-      <button class="btn-dark justify-self-start">Enviar mensaje</button>
-      <p data-ok class="hidden text-olive text-sm">✓ ¡Gracias! Te responderé pronto. (Demo — conéctalo a Formspree, Getform o tu email.)</p>
-    </form>
+      <!-- Formulario (demo): conéctalo a Formspree, Getform o a tu email -->
+      <form class="grid gap-7 mt-12" onsubmit="this.querySelector('[data-ok]').classList.remove('hidden');this.reset();return false;">
+        <label class="block"><span class="eyebrow">Nombre</span><input name="nombre" required autocomplete="name" class={field} /></label>
+        <label class="block"><span class="eyebrow">Email</span><input name="email" required type="email" autocomplete="email" class={field} /></label>
+        <label class="block"><span class="eyebrow">Mensaje</span><textarea name="mensaje" required rows="6" class={field}></textarea></label>
+        <button class="btn-dark justify-self-start">Enviar</button>
+        <p data-ok class="hidden text-olive text-sm">✓ ¡Gracias! Te responderé pronto.</p>
+      </form>
 
-    <aside class="space-y-8">
-      <div><p class="eyebrow mb-2">Email</p><a href={`mailto:${SITE.email}`} class="font-serif text-2xl link-underline">{SITE.email}</a></div>
-      <div><p class="eyebrow mb-2">Redes</p>
-        <div class="flex flex-col gap-1">
-          {Object.entries(SITE.social).filter(([,v])=>v).map(([n,u]) => <a href={u} target="_blank" rel="noopener" class="capitalize link-underline">{n}</a>)}
-        </div>
-      </div>
-      <div><p class="eyebrow mb-2">Tiempo de respuesta</p><p class="text-stone">Normalmente en menos de 48 horas.</p></div>
-    </aside>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq" class="bg-sand py-24">
-    <div class="container-x max-w-3xl">
-      <div class="text-center mb-14"><p class="eyebrow mb-3">Preguntas frecuentes</p><h2 class="font-serif text-4xl md:text-5xl">Resolvemos tus dudas</h2></div>
-      <div class="divide-y divide-line border-t border-b border-line">
-        {faqs.map((f) => (
-          <details class="group py-6">
-            <summary class="flex justify-between items-center cursor-pointer list-none">
-              <span class="font-serif text-xl md:text-2xl pr-6">{f.q}</span>
-              <span class="text-2xl text-clay transition-transform group-open:rotate-45">+</span>
-            </summary>
-            <p class="text-stone mt-4 leading-relaxed">{f.a}</p>
-          </details>
-        ))}
-      </div>
+      <p class="mt-16 pt-10 border-t border-line text-stone">
+        También puedes encontrarme en Instagram
+        <a href={SITE.social.instagram} target="_blank" rel="noopener" class="text-ink link-underline">{SITE.instagramHandle}</a>
+      </p>
     </div>
   </section>
 </Base>

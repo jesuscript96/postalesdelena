@@ -5,7 +5,6 @@ category: "Destinos"
 cover: "https://images.unsplash.com/photo-1523365154888-8a758819b722?auto=format&fit=crop&w=1400&q=80"
 date: 2026-08-28
 readingTime: "7 min"
-relatedGuide: "paris"
 featured: false
 ---
 

@@ -5,6 +5,23 @@ const U = (id, w = 1200, h) =>
   `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}${h ? `&h=${h}` : ''}&q=80`;
 
 export const IMG = {
+  // Foto de fondo de la portada. Elena: pon aquí una foto tuya de viaje
+  // (p. ej. '/images/portada.jpg' tras subirla a /public/images).
+  heroHome: U('1470770841072-f978cf4d019e', 2400),
+  // Japón
+  japanKyoto: U('1493976040374-85c8e12f0c0e'),
+  japanTorii: U('1492571350019-22de08371fd3'),
+  japanInari: U('1478436127897-769e1b3f0f36'),
+  japanTokyo: U('1540959733332-eab4deabeeaf'),
+  japanPagoda: U('1545569341-9eb8b30979d9'),
+  // Grecia
+  greeceOia: U('1613395877344-13d4a8e0d49e'),
+  greeceAcropolis: U('1555993539-1732b0258235'),
+  greeceMykonos: U('1601581875309-fafbf2d3ed3a'),
+  greeceSantorini: U('1570077188670-e3a8d69ac5ff'),
+  greeceAthens: U('1603565816030-6b389eeb23cb'),
+  // España
+  baztan: U('1441974231531-c6227db76b6e'),
   tuscanyHero: U('1444723121867-7a241cacace9', 2000),
   tuscany1: U('1523906834658-6e24ef2386f9'),
   tuscany2: U('1543429776-2782fc8e1acd'),

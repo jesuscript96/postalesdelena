@@ -17,12 +17,10 @@ const { data } = article;
 const { Content } = await article.render();
 const fmt = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 
-const guides = await getCollection('guides');
-const related = data.relatedGuide ? guides.find((g) => g.slug === data.relatedGuide) : null;
 const more = articles
   .filter((a) => a.slug !== article.slug && a.data.category === data.category)
-  .slice(0, 3);
-const fallback = articles.filter((a) => a.slug !== article.slug).slice(0, 3);
+  .slice(0, 4);
+const fallback = articles.filter((a) => a.slug !== article.slug).slice(0, 4);
 const suggestions = more.length ? more : fallback;
 ---
 
@@ -46,23 +44,12 @@ const suggestions = more.length ? more : fallback;
         <Content />
       </div>
 
-      {related && (
-        <aside class="max-w-2xl mx-auto mt-16 bg-sand p-8 md:p-10 flex flex-col md:flex-row gap-8 items-center">
-          <img src={related.data.cover} alt={related.data.title} class="w-40 aspect-[3/4] object-cover shrink-0" />
-          <div>
-            <p class="eyebrow mb-2">¿Te vas de viaje?</p>
-            <h3 class="font-serif text-2xl">Llévate la guía de {related.data.country}</h3>
-            <p class="text-sm text-stone mt-2">{related.data.subtitle}</p>
-            <a href={`/guias/${related.slug}`} class="btn-dark mt-5">Ver la guía · {SITE.currency}{related.data.price}</a>
-          </div>
-        </aside>
-      )}
     </div>
 
     <!-- Más historias -->
     <section class="container-x pb-24 border-t border-line pt-16">
       <p class="eyebrow mb-8">Sigue leyendo</p>
-      <div class="grid md:grid-cols-3 gap-10">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
         {suggestions.map((a) => <ArticleCard article={a} />)}
       </div>
     </section>

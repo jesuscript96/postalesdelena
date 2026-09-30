@@ -1,0 +1,17 @@
+---
+// Páginas 2, 3, 4… del Diario (la 1 es /diario)
+import DiarioList from '../../../components/DiarioList.astro';
+import { getArticles, paginate } from '../../../lib/diario.js';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  const { total } = paginate(articles, 1);
+  return Array.from({ length: total - 1 }, (_, i) => {
+    const page = i + 2;
+    return { params: { page: String(page) }, props: { ...paginate(articles, page), page } };
+  });
+}
+
+const { items, total, page } = Astro.props;
+---
+<DiarioList items={items} current={page} total={total} />

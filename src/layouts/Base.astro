@@ -13,7 +13,7 @@ const {
   wide = false,
 } = Astro.props;
 
-const pageTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${SITE.tagline}`;
+const pageTitle = title ? `${title} · ${SITE.displayName}` : `${SITE.displayName} · ${SITE.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -31,7 +31,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:site_name" content={SITE.displayName} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(image, Astro.site)} />

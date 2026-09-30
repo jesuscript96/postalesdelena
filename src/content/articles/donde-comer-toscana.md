@@ -5,7 +5,6 @@ category: "Gastronomía"
 cover: "https://images.unsplash.com/photo-1481931098730-318b6f776db0?auto=format&fit=crop&w=1400&q=80"
 date: 2026-08-12
 readingTime: "6 min"
-relatedGuide: "toscana"
 featured: false
 ---
 

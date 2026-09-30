@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import ArticleCard from './ArticleCard.astro';
+import Pagination from './Pagination.astro';
+import { SITE } from '../data/site.js';
+
+const { items, current, total } = Astro.props;
+---
+
+<Base
+  title={current > 1 ? `El Diario · Página ${current}` : 'El Diario'}
+  description="Historias, escapadas y descubrimientos de mis viajes: lugares especiales, hoteles con encanto, restaurantes y experiencias."
+>
+  <section class="container-x pt-36 pb-14 text-center">
+    <h1 class="font-serif uppercase tracking-[0.14em] text-4xl md:text-5xl">El Diario de {SITE.author}</h1>
+    <p class="mt-6 max-w-2xl mx-auto text-stone leading-relaxed md:text-lg">
+      Historias, escapadas y descubrimientos de mis viajes. Lugares especiales, hoteles con
+      encanto, restaurantes, experiencias y recomendaciones cuidadosamente seleccionadas para
+      inspirar tus próximos viajes.
+    </p>
+  </section>
+
+  <section class="container-x pb-20">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-14">
+      {items.map((a) => <ArticleCard article={a} />)}
+    </div>
+  </section>
+
+  <Pagination current={current} total={total} />
+</Base>

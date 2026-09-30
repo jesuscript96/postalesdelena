@@ -1,90 +1,57 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import GuideCard from '../../components/GuideCard.astro';
-import Newsletter from '../../components/Newsletter.astro';
-import { IMG } from '../../lib/img.js';
+import GuideCover from '../../components/GuideCover.astro';
+import GuideBook from '../../components/GuideBook.astro';
+import { SITE } from '../../data/site.js';
 
 const guides = (await getCollection('guides', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order
 );
-const regions = ['Todas', 'Italia', 'Francia', 'España', 'Resto de Europa'];
-const allStyles = [...new Set(guides.flatMap((g) => g.data.styles))];
 ---
 
-<Base title="Todas las guías" description="Explora todas las guías de viaje digitales: itinerarios cuidados para descubrir Europa despacio.">
-  <!-- Cabecera -->
-  <section class="relative h-[52vh] min-h-[380px] flex items-center justify-center text-center overflow-hidden">
-    <img src={IMG.tuscany1} alt="Guías de viaje" class="absolute inset-0 w-full h-full object-cover kenburns" />
-    <div class="hero-overlay"></div>
-    <div class="relative z-10 text-cream container-x">
-      <p class="eyebrow-line centered text-cream/75 mb-4 text-shadow-soft">La colección completa</p>
-      <h1 class="font-serif text-5xl md:text-7xl text-shadow-hero">Nuestras <span class="italic" style="color:#EBD4B8">guías</span></h1>
-      <p class="mt-4 max-w-xl mx-auto text-cream/90 text-shadow-soft">Itinerarios día a día, mapas, hoteles y experiencias para viajar despacio.</p>
-    </div>
+<Base title="Guías de viaje" description="Guías de viaje creadas a partir de experiencias reales: rutas, hoteles, restaurantes, lugares especiales y recomendaciones prácticas.">
+  <section class="container-x pt-36 pb-10 text-center">
+    <h1 class="font-serif uppercase tracking-[0.14em] text-4xl md:text-5xl">Guías de viaje</h1>
+    <p class="mt-6 max-w-2xl mx-auto text-stone leading-relaxed md:text-lg">
+      Guías de viaje creadas a partir de experiencias reales y cuidadosamente seleccionadas.
+      Rutas, hoteles, restaurantes, lugares especiales y recomendaciones prácticas para descubrir
+      cada destino y convertir cada viaje en un recuerdo especial.
+    </p>
   </section>
 
-  <!-- Filtros -->
-  <section class="container-x py-14">
-    <div class="flex flex-col gap-6 mb-12">
-      <div class="flex flex-wrap gap-2" data-filter-group="region">
-        {regions.map((r, i) => (
-          <button class:list={['filter-btn px-5 py-2 font-sans uppercase tracking-widest text-[11px] border transition-colors', i === 0 ? 'bg-ink text-cream border-ink' : 'border-line text-stone hover:border-ink hover:text-ink']} data-value={r}>{r}</button>
-        ))}
-      </div>
-      <div class="flex flex-wrap gap-2" data-filter-group="style">
-        <button class="filter-btn-style px-4 py-1.5 font-sans uppercase tracking-widest text-[10px] border border-ink bg-ink text-cream" data-value="Todos">Todos los estilos</button>
-        {allStyles.map((s) => (
-          <button class="filter-btn-style px-4 py-1.5 font-sans uppercase tracking-widest text-[10px] border border-line text-stone hover:border-ink hover:text-ink transition-colors" data-value={s}>{s}</button>
-        ))}
-      </div>
-    </div>
-
-    <div id="guide-grid" class="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-14">
-      {guides.map((g) => (
-        <div class="guide-item w-full" data-region={g.data.region} data-styles={g.data.styles.join('|')}>
-          <GuideCard guide={g} width="w-full" />
+  {guides.map((g, i) => (
+    <section id={g.slug} class:list={['py-20 md:py-24 scroll-mt-16', i % 2 === 0 ? 'bg-sand' : '']}>
+      <div class="container-x grid lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] gap-12 lg:gap-20 items-start">
+        <!-- Portada + compra -->
+        <div class="w-[min(72vw,300px)] mx-auto lg:mx-0">
+          <GuideCover guide={g} />
+          <h2 class="font-serif text-3xl mt-8 text-center">Guía de {g.data.title}</h2>
+          {g.data.subtitle && <p class="text-sm text-stone mt-2 text-center leading-relaxed">{g.data.subtitle}</p>}
+          <p class="font-serif text-2xl mt-4 text-center">{g.data.price} {SITE.currency}</p>
+          <a href={g.data.buyUrl} class="btn-dark w-full mt-5" data-buy>Añadir a la cesta</a>
+          <p class="text-[11px] text-stone text-center mt-3">Guía digital en PDF · entrega inmediata por email</p>
         </div>
-      ))}
-    </div>
-    <p id="empty-msg" class="hidden text-center text-stone py-16 font-serif text-2xl">No hay guías con estos filtros todavía.</p>
-  </section>
 
-  <Newsletter />
+        <!-- Libro hojeable -->
+        <div class="lg:pt-4">
+          <p class="eyebrow text-center mb-6">Hojea las primeras páginas</p>
+          <GuideBook guide={g} />
+        </div>
+      </div>
+    </section>
+  ))}
 </Base>
 
 <script>
-  let region = 'Todas';
-  let style = 'Todos';
-  const items = [...document.querySelectorAll('.guide-item')];
-  const empty = document.getElementById('empty-msg');
-
-  function apply() {
-    let visible = 0;
-    items.forEach((el) => {
-      const okR = region === 'Todas' || el.dataset.region === region;
-      const okS = style === 'Todos' || (el.dataset.styles || '').split('|').includes(style);
-      const show = okR && okS;
-      el.classList.toggle('hidden', !show);
-      if (show) visible++;
+  // Cesta demo — sustituir por la pasarela real de Elena (Lemon Squeezy / Stripe)
+  document.querySelectorAll<HTMLAnchorElement>('[data-buy]').forEach((b) => {
+    b.addEventListener('click', (e) => {
+      if (b.getAttribute('href') === '#') {
+        e.preventDefault();
+        b.textContent = '✓ Añadida a la cesta';
+        setTimeout(() => (b.textContent = 'Añadir a la cesta'), 2200);
+      }
     });
-    empty?.classList.toggle('hidden', visible > 0);
-  }
-
-  function wire(groupSel, activeClasses, onPick) {
-    document.querySelectorAll(groupSel).forEach((btn) => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll(groupSel).forEach((b) => {
-          b.classList.remove('bg-ink', 'text-cream', 'border-ink');
-          b.classList.add('border-line', 'text-stone');
-        });
-        btn.classList.add('bg-ink', 'text-cream', 'border-ink');
-        btn.classList.remove('border-line', 'text-stone');
-        onPick(btn.dataset.value);
-        apply();
-      });
-    });
-  }
-  wire('.filter-btn', '', (v) => (region = v));
-  wire('.filter-btn-style', '', (v) => (style = v));
+  });
 </script>

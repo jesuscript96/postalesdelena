@@ -1,22 +1,15 @@
 ---
-const { article, size = 'md' } = Astro.props;
+// Tarjeta del Diario: foto vertical y debajo solo el título.
+const { article } = Astro.props;
 const { data, slug } = article;
 const href = `/diario/${slug}`;
-const fmt = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
-<article class="group">
-  <a href={href} class="block overflow-hidden bg-sand">
-    <div class:list={[size === 'lg' ? 'aspect-[16/10]' : 'aspect-[4/3]', 'overflow-hidden']}>
-      <img src={data.cover} alt={data.title} loading="lazy"
-        class="w-full h-full object-cover transition-transform duration-[1.2s] ease-slow group-hover:scale-105" />
-    </div>
-  </a>
-  <div class="pt-5">
-    <p class="eyebrow">{data.category} · {data.readingTime}</p>
-    <h3 class:list={['font-serif mt-2 leading-snug', size === 'lg' ? 'text-3xl' : 'text-2xl']}>
-      <a href={href} class="link-underline">{data.title}</a>
-    </h3>
-    <p class="text-sm text-stone mt-3 leading-relaxed line-clamp-2">{data.excerpt}</p>
-    <p class="text-xs text-stone/70 mt-3">{fmt.format(data.date)}</p>
+<a href={href} class="group block">
+  <div class="aspect-[3/4] overflow-hidden bg-sand">
+    <img src={data.cover} alt={data.title} loading="lazy"
+      class="w-full h-full object-cover transition-transform duration-[1.2s] ease-slow group-hover:scale-105" />
   </div>
-</article>
+  <h3 class="font-serif text-xl md:text-[1.4rem] leading-snug mt-4 text-center">
+    <span class="link-underline">{data.title}</span>
+  </h3>
+</a>

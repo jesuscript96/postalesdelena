@@ -5,52 +5,44 @@
 // ─────────────────────────────────────────────────────────────
 
 export const SITE = {
-  name: 'VIVIR DESPACIO',
-  // El nombre se muestra en tres líneas en el logo (edítalas):
-  logoLines: ['VIVIR', 'DESPACIO'],
-  tagline: 'El arte de viajar despacio',
+  name: 'POSTALES DE ELENA',
+  displayName: 'Postales de Elena', // el nombre en texto normal (títulos, pie…)
+  tagline: 'Guías, lugares y pequeñas historias de viaje',
   author: 'Elena',
   description:
-    'Guías de viaje digitales y turismo lifestyle para descubrir Europa sin prisa: itinerarios cuidados, hoteles con alma, gastronomía y rincones auténticos.',
-  email: 'hola@vivirdespacio.com',
+    'Guías de viaje, lugares especiales y pequeñas historias de viaje: hoteles con encanto, restaurantes, experiencias y recomendaciones basadas en experiencias reales.',
+  email: 'hola@postalesdeelena.com',
   currency: '€',
+  instagramHandle: '@postalesdeelena',
   // Redes sociales — deja en '' las que no uses
   social: {
-    instagram: 'https://instagram.com/',
-    tiktok: 'https://tiktok.com/',
-    youtube: 'https://youtube.com/',
+    instagram: 'https://instagram.com/postalesdeelena',
+    tiktok: '',
+    youtube: '',
     pinterest: '',
   },
 };
 
-// Menú principal
+// Menú principal (arriba a la derecha)
 export const NAV = [
   { label: 'Guías', href: '/guias' },
-  { label: 'Destinos', href: '/destinos' },
-  { label: 'Lifestyle', href: '/lifestyle' },
   { label: 'El Diario', href: '/diario' },
-  { label: 'El Club', href: '/club' },
-  { label: 'Sobre Elena', href: '/sobre-elena' },
+  { label: 'Sobre mí', href: '/sobre-mi' },
+  { label: 'Contacto', href: '/contacto' },
+  { label: 'Carro', href: '/carrito' },
 ];
 
 // Enlaces del pie
 export const FOOTER = {
-  explore: [
-    { label: 'Todas las guías', href: '/guias' },
-    { label: 'Destinos', href: '/destinos' },
-    { label: 'Viajes a medida', href: '/lifestyle' },
-    { label: 'El Diario', href: '/diario' },
-  ],
-  help: [
-    { label: 'Sobre Elena', href: '/sobre-elena' },
-    { label: 'Contacto', href: '/contacto' },
-    { label: 'Preguntas frecuentes', href: '/contacto#faq' },
-    { label: 'El Club', href: '/club' },
+  main: [
+    { label: 'Guías de viaje', href: '/guias' },
+    { label: 'El Diario de Elena', href: '/diario' },
   ],
   legal: [
     { label: 'Aviso legal', href: '/legal/aviso-legal' },
-    { label: 'Privacidad', href: '/legal/privacidad' },
-    { label: 'Cookies', href: '/legal/cookies' },
+    { label: 'Política de privacidad', href: '/legal/privacidad' },
+    { label: 'Política de cookies', href: '/legal/cookies' },
     { label: 'Términos y devoluciones', href: '/legal/terminos' },
+    { label: 'Contacto', href: '/contacto' },
   ],
 };

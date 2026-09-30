@@ -4,23 +4,23 @@ import { defineCollection, z } from 'astro:content';
 const guides = defineCollection({
   type: 'content',
   schema: z.object({
-    title: z.string(),
+    title: z.string(), // "Japón"
     subtitle: z.string().optional(),
-    country: z.string(), // p.ej. "Italia"
-    region: z.enum(['Italia', 'Francia', 'España', 'Resto de Europa']),
     price: z.number(),
-    duration: z.string(), // "7 días"
-    bestWhen: z.string(), // "Mayo a Octubre"
-    forWho: z.string(), // "Amantes del arte, la gastronomía y los pueblos con encanto"
-    styles: z.array(z.string()).default([]), // ["Romántico","Gastronómico"]
+    duration: z.string().optional(), // "14 días"
     pages: z.number().optional(),
+    // Foto de ambiente (se usa para la portada provisional y el fondo del libro)
     cover: z.string(),
+    // Portada real de la guía (imagen). Si se deja vacía se muestra una portada provisional.
+    bookCover: z.string().optional(),
+    // Páginas de muestra que se hojean como un libro (de la 1 a la 7).
+    // Si se deja vacío se generan páginas provisionales con `gallery` e `includes`.
+    preview: z.array(z.string()).default([]),
     gallery: z.array(z.string()).default([]),
     includes: z
       .array(z.object({ title: z.string(), text: z.string() }))
       .default([]),
     buyUrl: z.string().default('#'), // enlace de la pasarela (Lemon Squeezy / Stripe)
-    featured: z.boolean().default(false),
     order: z.number().default(0),
     draft: z.boolean().default(false),
   }),
@@ -36,7 +36,6 @@ const articles = defineCollection({
     cover: z.string(),
     date: z.date(),
     readingTime: z.string().default('5 min'),
-    relatedGuide: z.string().optional(), // slug de una guía
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
   }),

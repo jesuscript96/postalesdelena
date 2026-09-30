@@ -1,0 +1,219 @@
+---
+// Libro hojeable con las páginas de muestra de una guía (de la 1 a la 7).
+// Usa `preview` (imágenes de las páginas reales). Si está vacío genera
+// páginas provisionales a partir de `gallery` e `includes`.
+import { SITE } from '../data/site.js';
+const { guide } = Astro.props;
+const { data } = guide;
+const TOTAL = 7;
+
+const pages = data.preview.length
+  ? data.preview.slice(0, TOTAL).map((src) => ({ kind: 'img', src }))
+  : [
+      { kind: 'title' },
+      { kind: 'index' },
+      ...data.includes.slice(0, TOTAL - 2).map((item, i) => ({
+        kind: 'chapter',
+        n: i + 1,
+        title: item.title,
+        text: item.text,
+        src: data.gallery[i % Math.max(data.gallery.length, 1)] ?? data.cover,
+      })),
+    ].slice(0, TOTAL);
+
+// Cada hoja tiene anverso y reverso. La última cara es la contraportada.
+const faces = [...pages, { kind: 'end' }];
+if (faces.length % 2) faces.push({ kind: 'blank' });
+const leaves = [];
+for (let i = 0; i < faces.length; i += 2) leaves.push([faces[i], faces[i + 1]]);
+---
+<div class="book max-w-[760px] mx-auto outline-none" data-book data-total={pages.length}>
+  <div class="book-stage">
+    <div class="book-body" data-state="closed">
+      {leaves.map(([front, back], i) => (
+        <div class="leaf" data-leaf={i} style={`z-index:${leaves.length - i}`}>
+          {[front, back].map((p, side) => (
+            <div class:list={['face', side === 0 ? 'front' : 'back']} data-go={side === 0 ? 'next' : 'prev'}>
+              {p.kind === 'img' && <img src={p.src} alt={`${data.title} · página ${i * 2 + side + 1}`} loading="lazy" class="w-full h-full object-cover" />}
+
+              {p.kind === 'title' && (
+                <div class="page-pad items-center justify-center text-center">
+                  <p class="eyebrow">{SITE.name}</p>
+                  <span class="h-px w-10 bg-line my-6"></span>
+                  <p class="font-serif text-4xl md:text-5xl uppercase tracking-[0.1em]">{data.title}</p>
+                  <p class="font-serif italic text-stone mt-3 text-sm md:text-base">Guía de viaje</p>
+                  {data.duration && <p class="eyebrow mt-8">{data.duration}</p>}
+                </div>
+              )}
+
+              {p.kind === 'index' && (
+                <div class="page-pad">
+                  <p class="eyebrow mb-3 md:mb-6">Índice</p>
+                  <ol class="space-y-1.5 md:space-y-4">
+                    {data.includes.map((it, n) => (
+                      <li class="flex items-baseline gap-2 md:gap-3 font-serif text-[13px] leading-snug md:text-xl">
+                        <span class="text-clay text-[10px] md:text-sm">{String(n + 1).padStart(2, '0')}</span>
+                        <span>{it.title}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <p class="hidden md:block mt-auto text-xs text-stone leading-relaxed">{data.subtitle}</p>
+                </div>
+              )}
+
+              {p.kind === 'chapter' && (
+                <div class="page-pad">
+                  <div class="aspect-[4/3] overflow-hidden -mx-1">
+                    <img src={p.src} alt="" loading="lazy" class="w-full h-full object-cover" />
+                  </div>
+                  <p class="text-clay font-serif text-sm mt-4 md:mt-6">{String(p.n).padStart(2, '0')}</p>
+                  <p class="font-serif text-xl md:text-2xl mt-1">{p.title}</p>
+                  <p class="text-[11px] md:text-sm text-stone mt-2 leading-relaxed">{p.text}</p>
+                </div>
+              )}
+
+              {p.kind === 'end' && (
+                <div class="page-pad items-center justify-center text-center bg-sand">
+                  <p class="font-serif italic text-2xl md:text-3xl">Fin del adelanto</p>
+                  <p class="text-xs md:text-sm text-stone mt-3">La guía completa te espera en la cesta.</p>
+                </div>
+              )}
+
+              {p.kind === 'blank' && <div class="page-pad bg-sand"></div>}
+
+              {p.kind !== 'end' && p.kind !== 'blank' && (
+                <span class:list={['page-num', side === 0 ? 'right-3' : 'left-3']}>{i * 2 + side + 1}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="mt-6 flex items-center justify-center gap-6">
+    <button class="book-btn" data-prev aria-label="Página anterior">←</button>
+    <span class="eyebrow min-w-[8.5rem] text-center" data-label>Pulsa para abrir</span>
+    <button class="book-btn" data-next aria-label="Página siguiente">→</button>
+  </div>
+</div>
+
+<style>
+  .book-stage {
+    perspective: 2400px;
+  }
+  /* El cuerpo ocupa dos páginas; cerrado se desplaza para centrar la portada */
+  .book-body {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 10 / 7;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .book-body[data-state='closed'] { transform: translateX(-25%); }
+  .book-body[data-state='end'] { transform: translateX(25%); }
+  .leaf {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+  .leaf.flipped { transform: rotateY(-180deg); }
+  .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: #fbf8f3;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 16px 36px -20px rgba(31, 27, 22, 0.55);
+  }
+  .face.back { transform: rotateY(180deg); }
+  /* Sombra del pliegue central */
+  .face.front::after,
+  .face.back::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    width: 12%;
+    pointer-events: none;
+  }
+  .face.front::after { left: 0; background: linear-gradient(to right, rgba(31, 27, 22, 0.14), transparent); }
+  .face.back::after { right: 0; background: linear-gradient(to left, rgba(31, 27, 22, 0.14), transparent); }
+  .page-pad {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 9% 10%;
+  }
+  .page-num {
+    position: absolute;
+    bottom: 0.6rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    color: #8a8172;
+  }
+  .book-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid #dcd3c4;
+    border-radius: 9999px;
+    transition: all 0.3s;
+  }
+  .book-btn:hover:not(:disabled) { background: #1f1b16; color: #f6f1e9; border-color: #1f1b16; }
+  .book-btn:disabled { opacity: 0.3; cursor: default; }
+  @media (prefers-reduced-motion: reduce) {
+    .leaf, .book-body { transition: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-book]').forEach((book) => {
+    const body = book.querySelector<HTMLElement>('.book-body')!;
+    const leaves = [...book.querySelectorAll<HTMLElement>('.leaf')];
+    const label = book.querySelector<HTMLElement>('[data-label]')!;
+    const prev = book.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = book.querySelector<HTMLButtonElement>('[data-next]')!;
+    const total = Number(book.dataset.total);
+    let flipped = 0; // hojas pasadas
+
+    const render = () => {
+      leaves.forEach((leaf, i) => {
+        const isFlipped = i < flipped;
+        leaf.classList.toggle('flipped', isFlipped);
+        // Las hojas pasadas se apilan a la izquierda: la última encima
+        leaf.style.zIndex = String(isFlipped ? i + 1 : leaves.length - i);
+      });
+      body.dataset.state = flipped === 0 ? 'closed' : flipped === leaves.length ? 'end' : 'open';
+      const left = flipped * 2;
+      const right = left + 1;
+      label.textContent =
+        flipped === 0 ? 'Pulsa para abrir'
+        : flipped === leaves.length ? 'Fin del adelanto'
+        : right > total ? `Página ${left} de ${total}`
+        : `Páginas ${left}–${right} de ${total}`;
+      prev.disabled = flipped === 0;
+      next.disabled = flipped === leaves.length;
+    };
+    const go = (d: number) => {
+      flipped = Math.max(0, Math.min(leaves.length, flipped + d));
+      render();
+    };
+
+    next.addEventListener('click', () => go(1));
+    prev.addEventListener('click', () => go(-1));
+    book.querySelectorAll<HTMLElement>('.face').forEach((f) =>
+      f.addEventListener('click', () => go(f.dataset.go === 'next' ? 1 : -1))
+    );
+    book.tabIndex = 0;
+    book.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') go(-1);
+    });
+    render();
+  });
+</script>

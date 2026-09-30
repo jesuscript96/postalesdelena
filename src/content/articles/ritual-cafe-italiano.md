@@ -5,7 +5,6 @@ category: "Rituales Slow"
 cover: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=80"
 date: 2026-08-20
 readingTime: "4 min"
-relatedGuide: "toscana"
 featured: false
 ---
 

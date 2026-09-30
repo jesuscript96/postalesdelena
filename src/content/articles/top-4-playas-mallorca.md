@@ -5,7 +5,6 @@ category: "Destinos"
 cover: "https://images.unsplash.com/photo-1509233725247-49e657c54213?auto=format&fit=crop&w=1400&q=80"
 date: 2026-09-05
 readingTime: "5 min"
-relatedGuide: "mallorca"
 featured: false
 ---
 
